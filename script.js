@@ -29,11 +29,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     questions.forEach((question, index) => {
         const div = document.createElement("div");
+        div.classList.add("p-4", "border", "rounded-lg", "bg-gray-50");
         div.innerHTML = `
-            <p>${question}</p>
-            <label><input type="radio" name="q${index}" value="2"> Oui</label>
-            <label><input type="radio" name="q${index}" value="1"> Partiellement</label>
-            <label><input type="radio" name="q${index}" value="0"> Non</label>
+            <p class="font-medium">${question}</p>
+            <label class="mr-4"><input type="radio" name="q${index}" value="2" class="ml-2"> Oui</label>
+            <label class="mr-4"><input type="radio" name="q${index}" value="1" class="ml-2"> Partiellement</label>
+            <label><input type="radio" name="q${index}" value="0" class="ml-2"> Non</label>
         `;
         form.appendChild(div);
     });
@@ -61,8 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 datasets: [{
                     label: "Niveau de Maturité",
                     data: finalScores,
-                    backgroundColor: "rgba(0, 123, 255, 0.2)",
-                    borderColor: "rgba(0, 123, 255, 1)",
+                    backgroundColor: "rgba(59, 130, 246, 0.2)",
+                    borderColor: "rgba(59, 130, 246, 1)",
                     borderWidth: 2
                 }]
             },
