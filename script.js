@@ -1,5 +1,17 @@
-
 document.addEventListener("DOMContentLoaded", function () {
+    const themes = [
+        "Protection des postes",
+        "Pare-feu",
+        "Sauvegarde",
+        "Sécurité des e-mails",
+        "Accès et mots de passe",
+        "Sensibilisation",
+        "Télétravail",
+        "Procédures d’urgence",
+        "RSSI",
+        "PCA/PRA"
+    ];
+
     const questions = [
         "Chaque poste de travail est équipé d'un antimalware avancé et d'un pare-feu actif ?",
         "Avez-vous un pare-feu d'entreprise et analysez-vous régulièrement ses journaux d'événements ?",
@@ -19,24 +31,50 @@ document.addEventListener("DOMContentLoaded", function () {
         const div = document.createElement("div");
         div.innerHTML = `
             <p>${question}</p>
-            <label><input type="radio" name="q${index}" value="oui"> Oui</label>
-            <label><input type="radio" name="q${index}" value="partiellement"> Partiellement</label>
-            <label><input type="radio" name="q${index}" value="non"> Non</label>
+            <label><input type="radio" name="q${index}" value="2"> Oui</label>
+            <label><input type="radio" name="q${index}" value="1"> Partiellement</label>
+            <label><input type="radio" name="q${index}" value="0"> Non</label>
         `;
         form.appendChild(div);
     });
 
     document.getElementById("submitBtn").addEventListener("click", function () {
-        let score = 0;
+        let scores = Array(themes.length).fill(0);
+        let counts = Array(themes.length).fill(0);
+
         questions.forEach((_, index) => {
             const answer = document.querySelector(`input[name='q${index}']:checked`);
             if (answer) {
-                if (answer.value === "oui") score += 2;
-                else if (answer.value === "partiellement") score += 1;
+                const value = parseInt(answer.value);
+                scores[index] += value;
+                counts[index] += 1;
             }
         });
         
-        const result = document.getElementById("result");
-        result.textContent = score > 15 ? "Maturité élevée" : score > 10 ? "Maturité moyenne" : "Maturité faible. Pensez à renforcer vos mesures de sécurité.";
+        let finalScores = scores.map((score, i) => counts[i] > 0 ? (score / counts[i]) : 0);
+
+        const ctx = document.getElementById("maturityRadar").getContext("2d");
+        new Chart(ctx, {
+            type: "radar",
+            data: {
+                labels: themes,
+                datasets: [{
+                    label: "Niveau de Maturité",
+                    data: finalScores,
+                    backgroundColor: "rgba(0, 123, 255, 0.2)",
+                    borderColor: "rgba(0, 123, 255, 1)",
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 2,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
     });
 });
